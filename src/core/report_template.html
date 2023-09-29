@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Relatório · % day %</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/dashboard/">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    body {
+      font-size: .875rem;
+    }
+
+    .feather {
+      width: 16px;
+      height: 16px;
+      vertical-align: text-bottom;
+    }
+
+    /*
+  * Sidebar
+  */
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      /* Behind the navbar */
+      padding: 48px 0 0;
+      /* Height of navbar */
+      box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    }
+
+    .sidebar-sticky {
+      position: relative;
+      top: 0;
+      height: calc(100vh - 48px);
+      padding-top: .5rem;
+      overflow-x: hidden;
+      overflow-y: auto;
+      /* Scrollable contents if viewport is shorter than content. */
+    }
+
+    @supports ((position: -webkit-sticky) or (position: sticky)) {
+      .sidebar-sticky {
+        position: -webkit-sticky;
+        position: sticky;
+      }
+    }
+
+    .sidebar .nav-link {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .sidebar .nav-link .feather {
+      margin-right: 4px;
+      color: #999;
+    }
+
+    .sidebar .nav-link.active {
+      color: #007bff;
+    }
+
+    .sidebar .nav-link:hover .feather,
+    .sidebar .nav-link.active .feather {
+      color: inherit;
+    }
+
+    .sidebar-heading {
+      font-size: .75rem;
+      text-transform: uppercase;
+    }
+
+    /*
+  * Content
+  */
+
+    [role="main"] {
+      padding-top: 133px;
+      /* Space for fixed navbar */
+    }
+
+    @media (min-width: 768px) {
+      [role="main"] {
+        padding-top: 48px;
+        /* Space for fixed navbar */
+      }
+    }
+
+    /*
+  * Navbar
+  */
+
+    .navbar-brand {
+      padding-top: .75rem;
+      padding-bottom: .75rem;
+      font-size: 1rem;
+      background-color: rgba(0, 0, 0, .25);
+      box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+    }
+
+    .navbar .form-control {
+      padding: .75rem 1rem;
+      border-width: 0;
+      border-radius: 0;
+    }
+
+    .form-control-dark {
+      color: #fff;
+      background-color: rgba(255, 255, 255, .1);
+      border-color: rgba(255, 255, 255, .1);
+    }
+
+    .form-control-dark:focus {
+      border-color: transparent;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <main role="main" class="mx-4 col-lg-10 px-4">
+
+        <h2>Relatório do dia</h2>
+        <div class="table-responsive">
+
+          <table border="1" class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th>a. Menor peso de pacote individual transportado durante todo o dia</th>
+                <th>b. Maior peso de pacote individual transportado durante todo o dia</th>
+                <th>c. Menor quantidade de pacotes embarcados em uma parada</th>
+                <th>d. Maior quantidade de pacotes embarcados em uma parada</th>
+                <th>e. Menor quantidade total de peso no caminhão ao encerrar parada</th>
+                <th>f. Maior quantidade total de peso no caminhão ao encerrar parada</th>
+                <th>g. Maior peso excedente durante todo o dia</th>
+                <th>h. Maior valor excedente durante todo o dia</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>% smallest_packge_weight %</td>
+                <td>% largest_packge_weight %</td>
+                <td>% smallest_quantity_of_packages %</td>
+                <td>% largest_quantity_of_packages %</td>
+                <td>% smallest_quantity_total_weight %</td>
+                <td>% largest_quantity_total_weight %</td>
+                <td>% smallest_excess_weight_total %</td>
+                <td>% largest_excess_weight_total %</td>
+              </tr>
+              <!-- Adicione mais linhas de dados conforme necessário -->
+            </tbody>
+          </table>
+        </div>
+
+        <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+      </main>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="/docs/4.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.9.0/dist/feather.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.min.js"></script>
+  <script>
+      /* globals Chart:false, feather:false */
+
+      (function () {
+        'use strict'
+
+        feather.replace()
+
+        // Graphs
+        var ctx = document.getElementById('myChart')
+        // eslint-disable-next-line no-unused-vars
+        var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: % labels %,
+        datasets: [{
+          data: % data %,
+        lineTension: 0,
+        backgroundColor: 'transparent',
+        borderColor: '#007bff',
+        borderWidth: 4,
+        pointBackgroundColor: '#007bff'
+            }]
+          },
+        options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: false
+            }
+          }]
+        },
+        legend: {
+          display: false
+        }
+      }
+        })
+      }())
+
+  </script>
+</body>
+
+</html>
