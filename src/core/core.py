@@ -43,6 +43,8 @@ Methods:
 Fields:
 - `current_truck`: The `Truck` object representing the truck being operated on.
 """
+
+
 @dataclass
 class RunProgram:
     current_truck: Truck
@@ -106,58 +108,84 @@ class RunProgram:
                 "3. Encerrar parada",
             ]
         )
-        packges_at_stop = 0  # Initialize a variable to keep track of the number of packages loaded at the current stop.
+        # Initialize a variable to keep track of the number of packages loaded at the current stop.
+        packges_at_stop = 0
 
-        while True:  # Continue running until the user decides to end the stop.
-            self.current_truck.stops += 1  # Increment the number of stops made by the truck.
-            opt = stop_menu.run()  # Display a menu and get the user's choice.
-
-            if opt == 1:  # If the user chooses option 1 (insert package):
-                packge_weight = int(input("[?] Peso do pacote (em kg): "))  # Get the weight of the package from the user.
-                packge_value = float(input("[?] Valor da mercadoria: "))  # Get the value of the package from the user.
+        while True:
+            self.current_truck.stops += 1
+            opt = stop_menu.run()
+            if opt == 1:
+                packge_weight = int(input("[?] Peso do pacote (em kg): "))
+                packge_value = float(input("[?] Valor da mercadoria: "))
                 print("Calculando custos", end=" ")
-                self.animated_dots(3, 0.25)  # Display an animated loading message.
-                pack = Packge(packge_weight, packge_value)  # Create a package object.
-                print(f"Custo do transporte: {pack.transport_cost}")  # Calculate and display the transport cost.
+                self.animated_dots(3, 0.25)
+                pack = Packge(packge_weight, packge_value)
+                print(f"Custo do transporte: {pack.transport_cost}")
                 extra_insurence = pack.extra_insurance_cost(
-                    self.current_truck.volume)  # Calculate the extra insurance cost.
-                print(f"Custo de seguro: {extra_insurence}")  # Display the insurance cost.
-
-                if extra_insurence > 0:  # If the insurance cost is greater than 0:
+                    self.current_truck.volume)
+                print(f"Custo de seguro: {extra_insurence}")
+                if extra_insurence > 0:
                     opt_insurance = input(
-                        "[?] Deseja inserir o custo de seguro? (s/n): ").lower()  # Ask the user if they want to include the insurance cost.
-
-                    if opt_insurance == "s":  # If the user chooses to include insurance cost:
+                        "[?] Deseja inserir o custo de seguro? (s/n): ").lower()
+                    if opt_insurance == "s":
                         print(
-                            f"Custo total: {pack.transport_cost + extra_insurence}")  # Display the total cost with insurance.
-                        packge_value += extra_insurence  # Add the insurance cost to the package value.
-                        pack.value = packge_value  # Update the package's value.
-                    elif opt_insurance == "n":  # If the user chooses not to include insurance cost:
+                            f"Custo total: {pack.transport_cost + extra_insurence}")
+                        packge_value += extra_insurence
+                        pack.value = packge_value
+                    elif opt_insurance == "n":
                         print(
-                            "O custo de seguro não foi inserido. Logo você precisa diminuir o peso")
+                            "O custo de seguro não foi inserido. Logo você precisa diminur o peso")
                         time.sleep(3)
                         continue
-                    else:  # If the user provides an invalid input:
+                    else:
                         print("Insira um valor válido!")
                         time.sleep(3)
                         continue
-
                 confirmation = input(
-                    "[?] Deseja inserir o pacote? (s/n): ").lower()  # Ask the user for confirmation to insert the package.
-
-                if confirmation == "s":  # If the user confirms to insert the package:
-                    res = self.current_truck.insert_package(pack)  # Insert the package into the truck.
-                    packges_at_stop += 1  # Increment the count of packages at the stop.
-                    print(res)  # Display the result of the insertion.
-                    time.sleep(5)  # Wait for 5 seconds.
-                    clear()  # Clear the console screen.
+                    "[?] Deseja inserir o pacote? (s/n): ").lower()
+                if confirmation == "s":
+                    res = self.current_truck.insert_package(pack)
+                    packges_at_stop += 1
+                    print(res)
+                    time.sleep(5)
+                    clear()
                     continue
-                else:  # If the user chooses not to insert the package:
+                else:
                     print("O pacote não foi inserido.")
                     time.sleep(1)
                     continue
 
-            # Similar sections for options 2 and 3...
+            elif opt == 2:
+                print(f"""
+                Aqui você pode retirar o seguinte pacote
+                com as seguintes informações:
+                Peso: {self.current_truck.load_list[-1].weight}
+                Valor: {self.current_truck.load_list[-1].value}
+                """)
+                confirmation = input(
+                    "[?] Deseja retirar o pacote? (s/n): ").lower()
+
+                if confirmation == "s":
+                    res = self.current_truck.remove_package()
+                    print(res)
+                    time.sleep(2)
+                    clear()
+                    continue
+                else:
+                    print("O pacote não foi retirado.")
+                    time.sleep(2)
+                    clear()
+                    continue
+
+            elif opt == 3:
+                print("[!] Parada encerrada.")
+                self.current_truck.qtd_packages_by_stop.append(
+                    packges_at_stop
+                )
+                time.sleep(2)
+                break
+            else:
+                print("Opção invalida. Por favor, escolha uma opção válida.")
 
     def _check_status_process(self) -> None:
         """
@@ -230,7 +258,7 @@ class RunProgram:
         """
         End the day's process by calling the `finish_day` method of the `current_truck` object,
         printing a message indicating that the day has ended, pausing for 2 seconds, and clearing the console screen.
-    
+
         Example Usage:
         ```python
         run_program = RunProgram(current_truck)
